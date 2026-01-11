@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Storage - Home</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                <path d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2m0 18h12V9h-6V3H6v17z"/>
+            </svg>
+            File Storage
+        </a>
+        <div class="navbar-menu">
+            <a href="/log-in" class="btn btn-secondary">Log In</a>
+            <a href="/sign-up" class="btn btn-primary">Sign Up</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <% if (locals.newUser === true) { %>
+        <div class="success-message" style="max-width: 600px; margin: 0 auto 20px;">
+            Account created successfully! Welcome to File Storage. You can now log in to start uploading your files.
+        </div>
+        <% } %>
+
+        <div class="hero">
+            <h1>Store and share your files securely</h1>
+            <p>Access your files anywhere, anytime. Simple, secure, and reliable.</p>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <a href="/sign-up" class="btn btn-primary">Get Started</a>
+                <a href="/log-in" class="btn btn-secondary">Log In</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M17.13,17C15.92,18.85 14.11,20.24 12,20.92C9.89,20.24 8.08,18.85 6.87,17C6.53,16.5 6.24,16 6,15.47C6,13.82 8.71,12.47 12,12.47C15.29,12.47 18,13.79 18,15.47C17.76,16 17.47,16.5 17.13,17Z"/>
+                </svg>
+                <h3>Secure Storage</h3>
+                <p>Your files are encrypted and stored securely with enterprise-grade security measures.</p>
+            </div>
+
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M17,12L12,17L7,12L8.4,10.6L11,13.2V1H13V13.2L15.6,10.6L17,12M19,15H21V23H3V15H5V21H19V15Z"/>
+                </svg>
+                <h3>Easy Upload</h3>
+                <p>Drag and drop files or click to upload. Share with anyone using simple links.</p>
+            </div>
+
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M4,6H2V20A2,2 0 0,0 4,22H18V20H4V6M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H8V4H20V16Z"/>
+                </svg>
+                <h3>Access Anywhere</h3>
+                <p>Access your files from any device, anywhere in the world, at any time.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

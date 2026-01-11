@@ -1,5 +1,8 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import queries from "../db/queries.js";
+import bcrypt from "bcryptjs";
+
 
 passport.use(
     new LocalStrategy(async (username, password, done) => {
