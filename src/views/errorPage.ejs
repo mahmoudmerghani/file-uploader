@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - File Storage</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                <path d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2m0 18h12V9h-6V3H6v17z"/>
+            </svg>
+            File Storage
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="error-page" style="text-align: center; margin-top: 100px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#f28b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            
+            <h1 style="color: #f28b82; margin-bottom: 20px;">Oops! Something went wrong</h1>
+            
+            <% if (errorMessage) { %>
+                <p style="color: #e8eaed; font-size: 18px; margin-bottom: 30px;"><%= errorMessage %></p>
+            <% } else { %>
+                <p style="color: #e8eaed; font-size: 18px; margin-bottom: 30px;">An unexpected error occurred.</p>
+            <% } %>
+            
+            <a href="/" class="btn btn-primary">Go to Home Page</a>
+        </div>
+    </div>
+</body>
+</html>

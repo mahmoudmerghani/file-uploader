@@ -21,7 +21,31 @@ model Session {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String @unique
+  id       Int      @id @default(autoincrement())
+  username String   @unique
   password String
+  folders  Folder[]
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  mimeType  String
+  size      Int
+  path      String
+  createdAt DateTime @default(now())
+  folder    Folder   @relation(fields: [folderId], references: [id])
+  folderId  Int
+}
+
+model Folder {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  files     File[]
+  parent    Folder?  @relation("children", fields: [parentId], references: [id])
+  children  Folder[] @relation("children")
+  user      User     @relation(fields: [userId], references: [id])
+  parentId  Int?
+  userId    Int
 }

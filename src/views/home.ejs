@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - File Storage</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/home" class="navbar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                <path d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2m0 18h12V9h-6V3H6v17z"/>
+            </svg>
+            File Storage
+        </a>
+        <div class="navbar-menu">
+            <span style="color: #9aa0a6; margin-right: 16px;">Welcome, <%= user.username %></span>
+            <form action="/log-out" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-secondary">Log Out</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="home-header">
+            <h1>My Files</h1>
+            <p>Manage and organize your files</p>
+        </div>
+
+        <div class="home-content">
+            <div class="upload-section">
+                <form action="/files" method="POST" enctype="multipart/form-data">
+                    <div class="upload-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="#8ab4f8">
+                            <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"/>
+                        </svg>
+                        <h2>Upload your files</h2>
+                        <p>Click or drag files here to upload</p>
+                        <input type="file" name="file" id="fileInput" style="display: block; margin: 16px auto; padding: 8px; border: 1px solid #5f6368; border-radius: 4px; background: #303134; color: #e8eaed; width: 300px;">
+                        <button type="submit" class="btn btn-primary" style="margin-top: 8px; padding: 8px 24px; width: auto;">Upload</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="storage-info">
+                <h3>Storage</h3>
+                <div class="storage-bar">
+                    <div class="storage-bar-fill" style="width: 15%;"></div>
+                </div>
+                <p>1.5 GB of 10 GB used</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

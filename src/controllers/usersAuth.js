@@ -18,7 +18,7 @@ const authenticateUser = (req, res, next) => {
 
 const redirectIfAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
-        res.redirect("/home");
+        res.redirect("/folders");
     } else {
         next();
     }

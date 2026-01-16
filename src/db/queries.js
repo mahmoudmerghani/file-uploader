@@ -31,8 +31,44 @@ async function createUser({ username, password }) {
     return user;
 }
 
+async function createRootFolder(name, userId) {
+    const folder = await prisma.folder.create({
+        data: {
+            name,
+            userId,
+        },
+    });
+
+    return folder.id;
+}
+
+async function createFile({ name, mimeType, size, path, folderId }) {
+    const file = await prisma.file.create({
+        data: {
+            name,
+            mimeType,
+            size,
+            path,
+            folderId,
+        },
+    });
+
+    return file.id;
+}
+
+async function getUserRootFolderId(userId) {
+    const folder = await prisma.folder.findUnique({
+        where: { userId, parentId: null },
+    });
+
+    return folder.id;
+}
+
 export default {
     getUserByUsername,
     createUser,
-    getUserById
+    getUserById,
+    createRootFolder,
+    createFile,
+    getUserRootFolderId
 };

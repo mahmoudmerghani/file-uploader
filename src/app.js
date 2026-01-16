@@ -7,6 +7,8 @@ import "./config/passportConfig.js";
 import { join } from "node:path";
 
 import indexRouter from "./routes/indexRouter.js";
+import filesRouter from "./routes/filesRouter.js";
+import foldersRouter from "./routes/foldersRouter.js";
 
 const app = express();
 
@@ -29,12 +31,22 @@ app.use(
             dbRecordIdIsSessionId: true,
             dbRecordIdFunction: undefined,
         }),
-    })
+    }),
 );
 app.use(passport.session());
 
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
 
 app.use("/", indexRouter);
+app.use("/folders", foldersRouter);
+app.use("/files", filesRouter);
 
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.render("errorPage", { errorMessage: err.message });
+});
 
 app.listen(8080);

@@ -32,7 +32,10 @@ const signUpUser = [
             return res.render("sign-up", { errors: errors.array() });
         }
 
-        await queries.createUser(matchedData(req));
+        const user = matchedData(req);
+
+        const userId = await queries.createUser(user);
+        await queries.createRootFolder(user.username, userId);
         res.redirect("/?newUser=true");
     },
 ];
@@ -45,7 +48,16 @@ function logInUser(req, res) {
     }
 }
 
+function logOutUser(req, res, next) {
+    req.logOut((err) => {
+        if (err) return next(err);
+
+        res.redirect("/");
+    });
+}
+
 export default {
     signUpUser,
     logInUser,
+    logOutUser,
 };
