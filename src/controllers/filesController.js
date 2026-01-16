@@ -1,7 +1,7 @@
 import queries from "../db/queries.js";
 
 async function uploadFileToRoot(req, res) {
-    const rootFolderId = await queries.getUserRootFolderId(req.user);
+    const rootFolderId = await queries.getUserRootFolderId(req.user.id);
     await queries.createFile({
         name: req.file.originalname,
         mimeType: req.file.mimetype,
@@ -9,6 +9,8 @@ async function uploadFileToRoot(req, res) {
         path: req.file.filename,
         folderId: rootFolderId,
     });
+
+    res.redirect("/folders");
 }
 
 async function uploadFile(req, res, next) {

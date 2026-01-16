@@ -42,7 +42,7 @@ const signUpUser = [
 
 function logInUser(req, res) {
     if (req.isAuthenticated()) {
-        res.redirect("/home");
+        res.redirect("/folders");
     } else {
         res.render("log-in", { error: req.authInfo.errorMessage });
     }

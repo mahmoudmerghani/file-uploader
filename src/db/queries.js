@@ -24,11 +24,9 @@ async function createUser({ username, password }) {
             username,
             password: hashedPassword,
         },
-
-        select: { id: true },
     });
 
-    return user;
+    return user.id;
 }
 
 async function createRootFolder(name, userId) {
@@ -57,11 +55,20 @@ async function createFile({ name, mimeType, size, path, folderId }) {
 }
 
 async function getUserRootFolderId(userId) {
-    const folder = await prisma.folder.findUnique({
+    const folder = await prisma.folder.findFirst({
         where: { userId, parentId: null },
     });
 
-    return folder.id;
+    return folder?.id;
+}
+
+async function getUserFolders(userId) {
+    const folders = await prisma.folder.findMany({
+        where: { userId },
+        include: { files: true },
+    });
+
+    return folders;
 }
 
 export default {
@@ -70,5 +77,6 @@ export default {
     getUserById,
     createRootFolder,
     createFile,
-    getUserRootFolderId
+    getUserRootFolderId,
+    getUserFolders,
 };
