@@ -44,6 +44,10 @@ app.use("/", indexRouter);
 app.use("/folders", foldersRouter);
 app.use("/files", filesRouter);
 
+app.use((req, res) => {
+    throw new Error("Page not found");
+});
+
 app.use((err, req, res, next) => {
     console.log(err);
     res.render("errorPage", { errorMessage: err.message });

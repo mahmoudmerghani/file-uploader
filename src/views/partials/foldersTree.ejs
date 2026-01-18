@@ -1,0 +1,38 @@
+<%
+    const isRoot = nodeId === rootId;
+    const isExpanded = path.includes(nodeId);
+    const isSelected = nodeId === currentFolderId;
+    let classes = "folder";
+    classes += isExpanded ? " expanded" : "";
+    classes += isSelected ? " selected" : "";
+    const folder = foldersTree[nodeId];
+    const hasChildren = folder.files.length > 0 || folder.children.length > 0;
+
+%>
+
+<div class="<%= classes %>">
+    <a href="/folders/<%= nodeId %>">
+        <div class="folder-name">
+            <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6">
+                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+            </svg>
+            <span><%= folder.name %></span>
+        </div>
+    </a>
+    <% if (hasChildren) { %>
+        <div class="children">
+            <% folder.children.forEach((childId) => { %>
+                <%- include("foldersTree", { foldersTree, path, nodeId: childId, rootId, currentFolderId }) %>
+            <% }); %>
+            <% folder.files.forEach((file) => { %>
+                <div class="file">
+                    <%= file.name %>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+</div>

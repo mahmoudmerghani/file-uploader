@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - File Storage</title>
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Loading spinner animation */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: button-loading-spinner 0.6s linear infinite;
+        }
+        
+        .btn-primary.btn-loading::after {
+            border-top-color: #202124;
+        }
+        
+        @keyframes button-loading-spinner {
+            from { transform: rotate(0turn); }
+            to { transform: rotate(1turn); }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -30,52 +62,7 @@
             </div>
             
             <div class="folder-tree">
-                <div class="tree-item tree-item-root active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#8ab4f8">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                    </svg>
-                    <span>My Files</span>
-                </div>
-                
-                <div class="tree-item tree-item-nested">
-                    <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                    </svg>
-                    <span>Documents</span>
-                </div>
-                
-                <div class="tree-item tree-item-nested" style="padding-left: 40px;">
-                    <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                    </svg>
-                    <span>Work</span>
-                </div>
-                
-                <div class="tree-item tree-item-nested">
-                    <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                    </svg>
-                    <span>Photos</span>
-                </div>
-                
-                <div class="tree-item tree-item-nested">
-                    <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                    </svg>
-                    <span>Projects</span>
-                </div>
+                <%- include("partials/foldersTree", { foldersTree, path, nodeId: rootId, rootId, currentFolderId}) %>
             </div>
         </aside>
 
@@ -83,19 +70,18 @@
         <main class="main-content">
             <!-- Breadcrumbs -->
             <div class="breadcrumbs">
-                <a href="/home" class="breadcrumb-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                </a>
-                <svg class="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-                <a href="#" class="breadcrumb-item">Documents</a>
-                <svg class="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-                <span class="breadcrumb-item active">Work</span>
+                <% if (path && path.length > 0) { %>
+                    <% path.forEach((folderId, index) => { %>
+                        <% if (index === path.length - 1) { %>
+                            <a href="/folders/<%= folderId %>" class="breadcrumb-item active"><%= foldersTree[folderId].name %></a>
+                        <% } else { %>
+                            <a href="/folders/<%= folderId %>" class="breadcrumb-item"><%= foldersTree[folderId].name %></a>
+                            <svg class="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        <% } %>
+                    <% }); %>
+                <% } %>
             </div>
 
             <!-- Toolbar -->
@@ -107,56 +93,25 @@
             <div class="content-section">
                 <h3 class="section-title">Folders</h3>
                 <div class="items-grid">
-                    <div class="item-card folder-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
-                            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>Client Projects</h4>
-                            <p>12 items</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
+                    <% foldersTree[currentFolderId].children.forEach(childId => { %>
+                        <% const folder = foldersTree[childId]; %>
+                        <a href="/folders/<%= folder.id %>" class="item-card folder-card">
+                            <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
                             </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card folder-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
-                            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>Reports</h4>
-                            <p>8 items</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card folder-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
-                            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>Presentations</h4>
-                            <p>5 items</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
+                            <div class="item-info">
+                                <h4><%= folder.name %></h4>
+                                <p><%= folder.children.length + folder.files.length %> items</p>
+                            </div>
+                            <button class="btn-icon item-menu">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="5" r="2"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                    <circle cx="12" cy="19" r="2"/>
+                                </svg>
+                            </button>
+                        </a>
+                    <% }); %>
 
                     <div class="item-card folder-card add-new-card" id="newFolderBtn">
                         <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#8ab4f8" stroke-width="2">
@@ -176,95 +131,25 @@
             <div class="content-section">
                 <h3 class="section-title">Files</h3>
                 <div class="items-grid">
-                    <div class="item-card file-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ea4335">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>proposal.pdf</h4>
-                            <p>2.4 MB • Jan 15, 2026</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
+                    <% foldersTree[currentFolderId].files.forEach(file => { %>
+                        <div class="item-card file-card">
+                            <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                                <path d="M14 2v6h6"/>
                             </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card file-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4285f4">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>meeting-notes.docx</h4>
-                            <p>156 KB • Jan 14, 2026</p>
+                            <div class="item-info">
+                                <h4><%= file.name %></h4>
+                                <p><%= (file.size / 1024).toFixed(1) %> KB • <%= new Date(file.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
+                            </div>
+                            <button class="btn-icon item-menu">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="5" r="2"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                    <circle cx="12" cy="19" r="2"/>
+                                </svg>
+                            </button>
                         </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card file-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0f9d58">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>budget-2026.xlsx</h4>
-                            <p>824 KB • Jan 12, 2026</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card file-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f4b400">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>design-mockup.psd</h4>
-                            <p>15.8 MB • Jan 10, 2026</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="item-card file-card">
-                        <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9aa0a6">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
-                        <div class="item-info">
-                            <h4>requirements.txt</h4>
-                            <p>4 KB • Jan 9, 2026</p>
-                        </div>
-                        <button class="btn-icon item-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="5" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="12" cy="19" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
+                    <% }); %>
 
                     <div class="item-card file-card add-new-card" id="uploadFileBtn">
                         <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#8ab4f8" stroke-width="2">
@@ -287,14 +172,14 @@
                 <h3>Create New Folder</h3>
                 <button class="modal-close" id="closeFolderModal">&times;</button>
             </div>
-            <form action="/folders" method="POST">
+            <form action="/folders/<%= currentFolderId %>" method="POST">
                 <div class="form-group">
                     <label for="folderName">Folder Name</label>
                     <input type="text" id="folderName" name="name" placeholder="Enter folder name" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelFolderModal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Folder</button>
+                    <button type="submit" class="btn btn-primary" id="createFolderBtn">Create Folder</button>
                 </div>
             </form>
         </div>
@@ -307,14 +192,14 @@
                 <h3>Upload File</h3>
                 <button class="modal-close" id="closeFileModal">&times;</button>
             </div>
-            <form action="/files" method="POST" enctype="multipart/form-data">
+            <form action="/files/<%= currentFolderId %>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="fileInput">Choose File</label>
                     <input type="file" id="fileInput" name="file" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelFileModal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="submit" class="btn btn-primary" id="uploadFileSubmitBtn">Upload</button>
                 </div>
             </form>
         </div>
@@ -362,6 +247,24 @@
             if (e.target === fileModal) {
                 fileModal.style.display = 'none';
             }
+        });
+
+        // Handle folder form submission
+        const folderForm = document.querySelector('#folderModal form');
+        const createFolderBtn = document.getElementById('createFolderBtn');
+        
+        folderForm.addEventListener('submit', (e) => {
+            createFolderBtn.disabled = true;
+            createFolderBtn.classList.add('btn-loading');
+        });
+
+        // Handle file upload form submission
+        const fileForm = document.querySelector('#fileModal form');
+        const uploadFileSubmitBtn = document.getElementById('uploadFileSubmitBtn');
+        
+        fileForm.addEventListener('submit', (e) => {
+            uploadFileSubmitBtn.disabled = true;
+            uploadFileSubmitBtn.classList.add('btn-loading');
         });
     </script>
 </body>

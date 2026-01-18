@@ -34,8 +34,11 @@ const signUpUser = [
 
         const user = matchedData(req);
 
-        const userId = await queries.createUser(user);
-        await queries.createRootFolder(user.username, userId);
+        try {
+            await queries.createUserAndRootFolder(user);
+        } catch(err) {
+            throw new Error("Failed to sign up");
+        }
         res.redirect("/?newUser=true");
     },
 ];

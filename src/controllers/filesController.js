@@ -1,29 +1,19 @@
 import queries from "../db/queries.js";
 
-async function uploadFileToRoot(req, res) {
-    const rootFolderId = await queries.getUserRootFolderId(req.user.id);
+async function uploadFile(req, res) {
+    const { folderId } = req.params;
+
     await queries.createFile({
         name: req.file.originalname,
         mimeType: req.file.mimetype,
         size: req.file.size,
         path: req.file.filename,
-        folderId: rootFolderId,
+        folderId: Number(folderId),
     });
 
-    res.redirect("/folders");
-}
-
-async function uploadFile(req, res, next) {
-    await queries.createFile({
-        name: req.file.originalname,
-        mimeType: req.file.mimetype,
-        size: req.file.size,
-        path: req.file.filename,
-        folderId: req.params.folderId,
-    });
+    res.redirect(`/folders/${folderId}`);
 }
 
 export default {
     uploadFile,
-    uploadFileToRoot,
 };
