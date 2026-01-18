@@ -44,8 +44,9 @@ app.use("/", indexRouter);
 app.use("/folders", foldersRouter);
 app.use("/files", filesRouter);
 
-app.use((req, res) => {
-    throw new Error("Page not found");
+app.use((req, res, next) => {
+
+    res.status(404).render("errorPage", { errorMessage: "Page not found" });
 });
 
 app.use((err, req, res, next) => {

@@ -5,13 +5,13 @@
     let classes = "folder";
     classes += isExpanded ? " expanded" : "";
     classes += isSelected ? " selected" : "";
+    classes += isRoot ? " root" : "";
     const folder = foldersTree[nodeId];
     const hasChildren = folder.files.length > 0 || folder.children.length > 0;
 
 %>
-
 <div class="<%= classes %>">
-    <a href="/folders/<%= nodeId %>">
+    <a href="/folders/<%= nodeId %>" class="folder-link">
         <div class="folder-name">
             <svg class="tree-expand" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">
@@ -23,7 +23,7 @@
             <span><%= folder.name %></span>
         </div>
     </a>
-    <% if (hasChildren) { %>
+    <% if (hasChildren && isExpanded) { %>
         <div class="children">
             <% folder.children.forEach((childId) => { %>
                 <%- include("foldersTree", { foldersTree, path, nodeId: childId, rootId, currentFolderId }) %>

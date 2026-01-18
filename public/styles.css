@@ -402,16 +402,22 @@ form .btn {
 
 /* Sidebar Styles */
 .sidebar {
-    width: 280px;
+    width: 25vw;
+    max-width: 400px;
     background-color: #292a2d;
     border-right: 1px solid #3c4043;
     display: flex;
     flex-direction: column;
     overflow: auto;
-    padding-right: 15px;
+    padding-inline: 10px;
     position: sticky;
     top: 0;
     height: 100vh;
+}
+
+.folder-tree {
+    scrollbar-width: thin;
+    scrollbar-color: #9f9f9f #2c2c2c;
 }
 
 .sidebar-header {
@@ -487,16 +493,26 @@ form .btn {
     color: #8ab4f8;
 }
 
-.tree-item.selected {
+.folder > .folder-link {
+    padding-block: 0.5rem;
+    transition: background-color 0.2s;
+
+}
+
+.folder > .folder-link:hover {
+    background-color: #3c4043;
+}
+
+.folder.selected > .folder-link {
     background-color: rgba(138, 180, 248, 0.12);
     color: #8ab4f8;
 }
 
-.tree-item.selected svg {
+.folder.selected > .folder-link svg {
     fill: #8ab4f8;
 }
 
-.tree-item.tree-item-root {
+.folder.root > .folder-link {
     font-weight: 500;
 }
 
@@ -541,7 +557,7 @@ form .btn {
 }
 
 .file:hover {
-    background-color: #3c4043;
+    /* background-color: #3c4043; */
     color: #e8eaed;
 }
 
@@ -846,6 +862,10 @@ form .btn {
     display: flex;
     gap: 10px;
     align-items: center;
+}
+
+.folder {
+    min-width: fit-content;
 }
 
 .folder:not(.expanded) .children {

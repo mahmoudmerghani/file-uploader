@@ -2,7 +2,6 @@ import queries from "../db/queries.js";
 
 async function getFolder(req, res) {
     const folders = await queries.getUserFolders(req.user.id);
-    console.log(folders);
     const foldersTree = queries.buildFolderTree(folders);
     let folderId = req.params.folderId;
 
@@ -10,15 +9,13 @@ async function getFolder(req, res) {
         folderId = foldersTree.rootId;
     }
 
-    console.log(foldersTree);
     if (!foldersTree.folders[folderId]) {
         throw new Error("Folder does not exist");
     }
     const path = queries.getFolderPath(foldersTree.folders, folderId);
-    console.log(path);
 
     res.render("home", {
-        currentFolderId: folderId,
+        currentFolderId: Number(folderId),
         foldersTree: foldersTree.folders,
         rootId: foldersTree.rootId,
         path,
