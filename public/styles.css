@@ -398,7 +398,6 @@ form .btn {
 .home-layout {
     display: flex;
     min-height: 100vh;
-    overflow: hidden;
 }
 
 /* Sidebar Styles */
@@ -409,6 +408,10 @@ form .btn {
     display: flex;
     flex-direction: column;
     overflow: auto;
+    padding-right: 15px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
 }
 
 .sidebar-header {
@@ -503,8 +506,6 @@ form .btn {
 
 .tree-item span {
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
@@ -536,6 +537,7 @@ form .btn {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
+    white-space: nowrap;
 }
 
 .file:hover {
@@ -861,5 +863,5 @@ form .btn {
 }
 
 .file {
-    margin-left: 25px !important;
+    /* margin-left: 25px !important; */
 }
