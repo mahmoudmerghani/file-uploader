@@ -1,5 +1,15 @@
 import queries from "../db/queries.js";
 
+async function loadFolder(req, res, next) {
+    const { folderId } = req.params;
+
+    const folder = await queries.getFolderById(Number(folderId));
+
+    req.folder = folder;
+
+    return next();
+}
+
 async function getFolder(req, res) {
     const folders = await queries.getUserFolders(req.user.id);
     const foldersTree = queries.buildFolderTree(folders);
@@ -9,9 +19,6 @@ async function getFolder(req, res) {
         folderId = foldersTree.rootId;
     }
 
-    if (!foldersTree.folders[folderId]) {
-        throw new Error("Folder does not exist");
-    }
     const path = queries.getFolderPath(foldersTree.folders, folderId);
 
     res.render("home", {
@@ -23,14 +30,26 @@ async function getFolder(req, res) {
 }
 
 async function createFolder(req, res) {
-    const { folderId } = req.params;
+    await queries.createFolder(req.body.name, req.user.id, req.folder.id);
 
-    await queries.createFolder(req.body.name, req.user.id, Number(folderId));
+    res.redirect(`/folders/${req.folder.id}`);
+}
 
-    res.redirect(`/folders/${folderId}`);
+async function renameFolder(req, res) {
+    await queries.renameFolder(req.folder.id, req.body.name);
+    
+    res.redirect(`/folders/${req.folder.parentId}`);
+}
+
+async function deleteFolder(req, res) {
+    await queries.deleteFolder(req.folder.id);
+    
+    res.redirect(`/folders/${req.folder.parentId}`);
 }
 
 export default {
     getFolder,
     createFolder,
+    renameFolder,
+    deleteFolder
 };

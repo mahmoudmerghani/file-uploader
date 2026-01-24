@@ -86,10 +86,6 @@ async function getUserFolders(userId) {
 }
 
 async function createFolder(name, userId, parentId) {
-    const folder = await getUserFolder(userId, parentId);
-
-    if (!folder) throw new Error("User has no access to this folder");
-
     const newFolder = await prisma.folder.create({
         data: {
             name,
@@ -157,6 +153,52 @@ async function createUserAndRootFolder({ username, password }) {
     return result.id;
 }
 
+async function isFolderOwner(userId, folderId) {
+    const folder = await prisma.folder.findFirst({
+        where: {
+            userId,
+            folderId,
+        },
+    });
+
+    return folder !== null;
+}
+
+async function renameFolder(folderId, name) {
+    await prisma.folder.update({
+        data: {
+            name,
+        },
+        where: {
+            id: folderId,
+        },
+    });
+}
+
+async function deleteFolder(folderId) {
+    const children = await prisma.folder.findMany({
+        where: {
+            parentId: folderId,
+        },
+    });
+
+    for (const child of children) {
+        await deleteFolder(child.id);
+    }
+
+    await prisma.file.deleteMany({
+        where: {
+            folderId,
+        },
+    });
+
+    await prisma.folder.delete({
+        where: {
+            id: folderId,
+        },
+    });
+}
+
 export default {
     getUserByUsername,
     createUser,
@@ -168,5 +210,9 @@ export default {
     createFolder,
     buildFolderTree,
     createUserAndRootFolder,
-    getFolderPath
+    getFolderPath,
+    isFolderOwner,
+    getUserFolder,
+    renameFolder,
+    deleteFolder
 };
