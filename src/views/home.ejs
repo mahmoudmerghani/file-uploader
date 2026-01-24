@@ -102,7 +102,7 @@
                                 </svg>
                                 <div class="item-info">
                                     <h4><%= folder.name %></h4>
-                                    <p><%= folder.children.length + folder.files.length %> items</p>
+                                    <p><%= folder.children.length + folder.files.length %> items • <span class="format-date" data-date="<%= folder.createdAt %>"></span></p>
                                 </div>
                                 <button class="btn-icon item-menu" data-folder-id="<%= folder.id %>" data-folder-name="<%= folder.name %>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -119,12 +119,6 @@
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                     </svg>
                                     Rename
-                                </button>
-                                <button class="dropdown-item move-folder">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="9 6 15 12 9 18"/>
-                                    </svg>
-                                    Move
                                 </button>
                                 <button class="dropdown-item share-folder">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -169,22 +163,51 @@
                 <h3 class="section-title">Files</h3>
                 <div class="items-grid">
                     <% foldersTree[currentFolderId].files.forEach(file => { %>
-                        <div class="item-card file-card" title="<%= file.name %>">
-                            <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                                <path d="M14 2v6h6"/>
-                            </svg>
-                            <div class="item-info">
-                                <h4><%= file.name %></h4>
-                                <p><%= (file.size / 1024).toFixed(1) %> KB • <%= new Date(file.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
-                            </div>
-                            <button class="btn-icon item-menu">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <circle cx="12" cy="5" r="2"/>
-                                    <circle cx="12" cy="12" r="2"/>
-                                    <circle cx="12" cy="19" r="2"/>
+                        <div class="item-card-wrapper">
+                            <div class="item-card file-card" title="<%= file.name %>">
+                                <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                                    <path d="M14 2v6h6"/>
                                 </svg>
-                            </button>
+                                <div class="item-info">
+                                    <h4><%= file.name %></h4>
+                                    <p><%= (file.size / 1024).toFixed(1) %> KB • <span class="format-date" data-date="<%= file.createdAt %>"></span></p>
+                                </div>
+                                <button class="btn-icon item-menu file-menu-btn" data-file-id="<%= file.id %>" data-file-name="<%= file.name %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="5" r="2"/>
+                                        <circle cx="12" cy="12" r="2"/>
+                                        <circle cx="12" cy="19" r="2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="item-dropdown-menu" data-menu-for="file-<%= file.id %>">
+                                <button class="dropdown-item rename-file">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Rename
+                                </button>
+                                <button class="dropdown-item download-file" data-file-id="<%= file.id %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Download
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item delete-file delete-file-item" data-file-id="<%= file.id %>" data-file-name="<%= file.name %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        <line x1="10" y1="11" x2="10" y2="17"/>
+                                        <line x1="14" y1="11" x2="14" y2="17"/>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     <% }); %>
 
@@ -282,12 +305,67 @@
         </div>
     </div>
 
+    <!-- Rename File Modal -->
+    <div id="renameFileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rename File</h3>
+                <button class="modal-close" id="closeRenameFileModal">&times;</button>
+            </div>
+            <form id="renameFileForm" method="POST">
+                <div class="form-group">
+                    <label for="renameFileInput">New File Name</label>
+                    <input type="text" id="renameFileInput" name="name" placeholder="Enter new file name" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelRenameFileModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="renameFileBtn">Rename</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete File Modal -->
+    <div id="deleteFileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Delete File</h3>
+                <button class="modal-close" id="closeDeleteFileModal">&times;</button>
+            </div>
+            <form id="deleteFileForm" method="POST">
+                <div class="form-group">
+                    <p style="color: #9aa0a6; margin-bottom: 16px;">Are you sure you want to delete "<span id="deleteFileName"></span>"?</p>
+                    <p style="color: #f28b82; font-size: 14px;">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDeleteFileModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="deleteFileBtn" style="background-color: #f28b82; border-color: #f28b82;">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Format dates in user's local timezone
+        document.querySelectorAll('.format-date').forEach(element => {
+            const dateString = element.getAttribute('data-date');
+            if (dateString) {
+                const date = new Date(dateString);
+                element.textContent = date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            }
+        });
+
         // Modal elements
         const folderModal = document.getElementById('folderModal');
         const fileModal = document.getElementById('fileModal');
         const renameFolderModal = document.getElementById('renameFolderModal');
         const deleteFolderModal = document.getElementById('deleteFolderModal');
+        const renameFileModal = document.getElementById('renameFileModal');
+        const deleteFileModal = document.getElementById('deleteFileModal');
         const newFolderBtn = document.getElementById('newFolderBtn');
         const uploadFileBtn = document.getElementById('uploadFileBtn');
 
@@ -336,6 +414,24 @@
             deleteFolderModal.style.display = 'none';
         });
 
+        // Close rename file modal
+        document.getElementById('closeRenameFileModal').addEventListener('click', () => {
+            renameFileModal.style.display = 'none';
+        });
+
+        document.getElementById('cancelRenameFileModal').addEventListener('click', () => {
+            renameFileModal.style.display = 'none';
+        });
+
+        // Close delete file modal
+        document.getElementById('closeDeleteFileModal').addEventListener('click', () => {
+            deleteFileModal.style.display = 'none';
+        });
+
+        document.getElementById('cancelDeleteFileModal').addEventListener('click', () => {
+            deleteFileModal.style.display = 'none';
+        });
+
         // Close on outside click
         window.addEventListener('click', (e) => {
             if (e.target === folderModal) {
@@ -349,6 +445,12 @@
             }
             if (e.target === deleteFolderModal) {
                 deleteFolderModal.style.display = 'none';
+            }
+            if (e.target === renameFileModal) {
+                renameFileModal.style.display = 'none';
+            }
+            if (e.target === deleteFileModal) {
+                deleteFileModal.style.display = 'none';
             }
         });
 
@@ -476,6 +578,98 @@
         deleteFolderForm.addEventListener('submit', (e) => {
             deleteFolderBtn.disabled = true;
             deleteFolderBtn.classList.add('btn-loading');
+        });
+
+        // File menu dropdown functionality
+        const fileMenuButtons = document.querySelectorAll('.file-menu-btn');
+
+        fileMenuButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const fileId = button.getAttribute('data-file-id');
+                const menu = document.querySelector(`.item-dropdown-menu[data-menu-for="file-${fileId}"]`);
+                
+                // Close currently open menu if different
+                if (currentOpenMenu && currentOpenMenu !== menu) {
+                    currentOpenMenu.classList.remove('active');
+                }
+                
+                // Toggle current menu
+                menu.classList.toggle('active');
+                currentOpenMenu = menu.classList.contains('active') ? menu : null;
+            });
+        });
+
+        // Handle file menu item clicks
+        document.querySelectorAll('.rename-file').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const menu = e.target.closest('.item-dropdown-menu');
+                const menuFor = menu.getAttribute('data-menu-for');
+                const fileId = menuFor.replace('file-', '');
+                const button = document.querySelector(`.file-menu-btn[data-file-id="${fileId}"]`);
+                const fileName = button.getAttribute('data-file-name');
+                
+                // Set form action and populate input
+                document.getElementById('renameFileForm').action = `/files/${fileId}/rename`;
+                document.getElementById('renameFileInput').value = fileName;
+                
+                // Show modal
+                renameFileModal.style.display = 'flex';
+                menu.classList.remove('active');
+                
+                // Focus the input
+                setTimeout(() => {
+                    document.getElementById('renameFileInput').select();
+                }, 100);
+            });
+        });
+
+        document.querySelectorAll('.download-file').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const fileId = btn.getAttribute('data-file-id');
+                
+                // Create a temporary link and trigger download
+                window.location.href = `/files/${fileId}/download`;
+                
+                const menu = e.target.closest('.item-dropdown-menu');
+                menu.classList.remove('active');
+            });
+        });
+
+        document.querySelectorAll('.delete-file').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const fileId = btn.getAttribute('data-file-id');
+                const fileName = btn.getAttribute('data-file-name');
+                
+                // Set form action and populate file name
+                document.getElementById('deleteFileForm').action = `/files/${fileId}/delete`;
+                document.getElementById('deleteFileName').textContent = fileName;
+                
+                // Show modal
+                deleteFileModal.style.display = 'flex';
+                const menu = e.target.closest('.item-dropdown-menu');
+                menu.classList.remove('active');
+            });
+        });
+
+        // Handle rename file form submission
+        const renameFileForm = document.getElementById('renameFileForm');
+        const renameFileBtn = document.getElementById('renameFileBtn');
+        
+        renameFileForm.addEventListener('submit', (e) => {
+            renameFileBtn.disabled = true;
+            renameFileBtn.classList.add('btn-loading');
+        });
+
+        // Handle delete file form submission
+        const deleteFileForm = document.getElementById('deleteFileForm');
+        const deleteFileBtn = document.getElementById('deleteFileBtn');
+        
+        deleteFileForm.addEventListener('submit', (e) => {
+            deleteFileBtn.disabled = true;
+            deleteFileBtn.classList.add('btn-loading');
         });
     </script>
 </body>

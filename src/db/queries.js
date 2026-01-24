@@ -48,11 +48,7 @@ async function getUserFolder(userId, folderId) {
     return folder;
 }
 
-async function createFile({ name, mimeType, size, path, folderId, userId }) {
-    const folder = await getUserFolder(userId, folderId);
-
-    if (!folder) throw new Error("User has no access to this folder");
-
+async function createFile({ name, mimeType, size, path, folderId }) {
     const file = await prisma.file.create({
         data: {
             name,
@@ -199,6 +195,38 @@ async function deleteFolder(folderId) {
     });
 }
 
+async function getFileById(fileId) {
+    const file = await prisma.file.findFirst({
+        where: {
+            id: fileId,
+        },
+        include: {
+            folder: true,
+        },
+    });
+
+    return file;
+}
+
+async function renameFile(fileId, name) {
+    await prisma.file.update({
+        data: {
+            name,
+        },
+        where: {
+            id: fileId,
+        },
+    });
+}
+
+async function deleteFile(fileId) {
+    await prisma.file.delete({
+        where: {
+            id: fileId,
+        },
+    });
+}
+
 export default {
     getUserByUsername,
     createUser,
@@ -214,5 +242,8 @@ export default {
     isFolderOwner,
     getUserFolder,
     renameFolder,
-    deleteFolder
+    deleteFolder,
+    getFileById,
+    renameFile,
+    deleteFile
 };

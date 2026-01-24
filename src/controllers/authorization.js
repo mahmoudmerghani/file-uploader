@@ -12,9 +12,25 @@ async function authorizeFolderAccess(req, res, next) {
     }
 
     req.folder = folder;
-    next();
+    return next();
+}
+
+async function authorizeFileAccess(req, res, next) {
+    const { fileId } = req.params;
+
+    const file = await queries.getFileById(Number(fileId));
+
+    if (!file || file.folder.userId !== req.user.id) {
+        return res.status(403).render("errorPage", {
+            errorMessage: "You do not have permission to access this file.",
+        });
+    }
+
+    req.file = file;
+    return next();
 }
 
 export default {
     authorizeFolderAccess,
+    authorizeFileAccess
 };

@@ -791,6 +791,14 @@ form .btn {
     color: #f28b82;
 }
 
+.dropdown-item.delete-file-item {
+    color: #f28b82;
+}
+
+.dropdown-item.delete-file-item svg {
+    color: #f28b82;
+}
+
 .dropdown-divider {
     height: 1px;
     background-color: #3c4043;
