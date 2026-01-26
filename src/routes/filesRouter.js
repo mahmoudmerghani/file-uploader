@@ -1,12 +1,13 @@
 import express from "express";
 import multer from "multer";
-import { join } from "node:path";
 import usersAuth from "../controllers/usersAuth.js";
 import filesController from "../controllers/filesController.js";
 import authorization from "../controllers/authorization.js";
 
+const storage = multer.memoryStorage();
+
 const upload = multer({
-    dest: join(import.meta.dirname, "../../uploads"),
+    storage,
     limits: { fileSize: 1024 * 1024 * 10 },
 }).single("file");
 

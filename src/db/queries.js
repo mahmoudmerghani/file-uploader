@@ -48,8 +48,8 @@ async function getUserFolder(userId, folderId) {
     return folder;
 }
 
-async function createFile({ name, mimeType, size, path, folderId }) {
-    const file = await prisma.file.create({
+async function createFile({ name, mimeType, size, path, folderId, userId }) {
+    const createFile = prisma.file.create({
         data: {
             name,
             mimeType,
@@ -59,7 +59,18 @@ async function createFile({ name, mimeType, size, path, folderId }) {
         },
     });
 
-    return file.id;
+    const updateQuote = prisma.user.update({
+        data: {
+            quota: {
+                increment: size,
+            },
+        },
+        where: {
+            id: userId,
+        },
+    });
+
+    await prisma.$transaction([createFile, updateQuote]);
 }
 
 async function getUserRootFolderId(userId) {
@@ -219,11 +230,25 @@ async function renameFile(fileId, name) {
     });
 }
 
-async function deleteFile(fileId) {
-    await prisma.file.delete({
-        where: {
-            id: fileId,
-        },
+async function deleteFile(fileId, userId) {
+    await prisma.$transaction(async (tx) => {
+        const deletedFile = await tx.file.delete({
+            where: {
+                id: fileId,
+            },
+        });
+
+        await tx.user.update({
+            data: {
+                quota: {
+                    decrement: deletedFile.size,
+                },
+            },
+
+            where: {
+                id: userId,
+            },
+        });
     });
 }
 
@@ -245,5 +270,5 @@ export default {
     deleteFolder,
     getFileById,
     renameFile,
-    deleteFile
+    deleteFile,
 };

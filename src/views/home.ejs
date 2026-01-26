@@ -171,7 +171,7 @@
                                 </svg>
                                 <div class="item-info">
                                     <h4><%= file.name %></h4>
-                                    <p><%= (file.size / 1024).toFixed(1) %> KB • <span class="format-date" data-date="<%= file.createdAt %>"></span></p>
+                                    <p><%= (file.size / 1024 / 1024).toFixed(2) %> MB • <span class="format-date" data-date="<%= file.createdAt %>"></span></p>
                                 </div>
                                 <button class="btn-icon item-menu file-menu-btn" data-file-id="<%= file.id %>" data-file-name="<%= file.name %>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
