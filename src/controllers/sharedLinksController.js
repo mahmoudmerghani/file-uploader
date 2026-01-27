@@ -60,11 +60,11 @@ async function downloadFile(req, res) {
     const folders = await queries.getUserFolders(sharedLink.folder.user.id);
     const foldersTree = queries.buildFolderTree(folders);
     const file = await queries.getFileById(fileId);
-    
+
     if (!file) {
         throw new Error("File does not exist");
     }
-    
+
     const folderId = file.folderId;
 
     if (!foldersTree.folders[folderId]) {
@@ -87,7 +87,6 @@ async function downloadFile(req, res) {
         throw new Error("Cannot access this file");
     }
 
-
     const { data, error } = await supabase.storage
         .from("files")
         .createSignedUrl(file.path, 60);
@@ -96,21 +95,7 @@ async function downloadFile(req, res) {
         throw new Error("error downloading the file, try again");
     }
 
-    res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${file.name}"`,
-    );
-    res.setHeader("Content-Type", file.mimeType);
-
-    const fileRes = await fetch(data.signedUrl);
-
-    const nodeStream = Readable.fromWeb(fileRes.body);
-
-    if (!fileRes.ok) {
-        throw new Error("error downloading the file, try again");
-    }
-
-    await pipeline(nodeStream, res);
+    res.redirect(data.signedUrl + `&download=${file.name}`);
 }
 
 export default { getSharedFolder, downloadFile };

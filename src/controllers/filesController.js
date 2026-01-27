@@ -1,9 +1,6 @@
 import queries from "../db/queries.js";
 import crypto from "node:crypto";
 import { supabase } from "../../lib/supabase.js";
-import { Readable } from "node:stream";
-import { pipeline } from "node:stream/promises";
-
 
 async function uploadFile(req, res) {
     if (req.user.quota + req.file.size > 1024 * 1024 * 50) {
@@ -46,21 +43,7 @@ async function downloadFile(req, res) {
         throw new Error("error downloading the file, try again");
     }
 
-    res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${req.file.name}"`,
-    );
-    res.setHeader("Content-Type", req.file.mimeType);
-
-    const fileRes = await fetch(data.signedUrl);
-
-    const nodeStream = Readable.fromWeb(fileRes.body);
-
-    if (!fileRes.ok) {
-        throw new Error("error downloading the file, try again");
-    }
-
-    await pipeline(nodeStream, res)
+    res.redirect(data.signedUrl + `&download=${req.file.name}`);
 }
 
 async function deleteFile(req, res) {
