@@ -37,19 +37,34 @@ async function createFolder(req, res) {
 
 async function renameFolder(req, res) {
     await queries.renameFolder(req.folder.id, req.body.name);
-    
+
     res.redirect(`/folders/${req.folder.parentId}`);
 }
 
 async function deleteFolder(req, res) {
     await queries.deleteFolder(req.folder.id);
-    
+
     res.redirect(`/folders/${req.folder.parentId}`);
+}
+
+async function shareFolder(req, res) {
+    const { expirationPeriod } = req.body;
+
+    const milliseconds = parseInt(expirationPeriod, 10) * 60 * 60 * 1000;
+
+    const id = await queries.createShareLink(req.folder.id, milliseconds);
+
+    const origin = `https://${req.get("host")}`;
+
+    const link = origin + `/shared/${id}/folders/${req.folder.id}`;
+
+    res.render("share-link", { link, folderName: req.folder.name });
 }
 
 export default {
     getFolder,
     createFolder,
     renameFolder,
-    deleteFolder
+    deleteFolder,
+    shareFolder,
 };

@@ -345,6 +345,31 @@
         </div>
     </div>
 
+    <!-- Share Folder Modal -->
+    <div id="shareFolderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Folder</h3>
+                <button class="modal-close" id="closeShareFolderModal">&times;</button>
+            </div>
+            <form id="shareFolderForm" method="POST">
+                <div class="form-group">
+                    <label for="expirationPeriod">Link Expiration</label>
+                    <select id="expirationPeriod" name="expirationPeriod" required>
+                        <option value="1">1 hour</option>
+                        <option value="24" selected>24 hours</option>
+                        <option value="168">7 days</option>
+                        <option value="720">30 days</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelShareFolderModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="shareFolderBtn">Create Share Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Format dates in user's local timezone
         document.querySelectorAll('.format-date').forEach(element => {
@@ -366,6 +391,7 @@
         const deleteFolderModal = document.getElementById('deleteFolderModal');
         const renameFileModal = document.getElementById('renameFileModal');
         const deleteFileModal = document.getElementById('deleteFileModal');
+        const shareFolderModal = document.getElementById('shareFolderModal');
         const newFolderBtn = document.getElementById('newFolderBtn');
         const uploadFileBtn = document.getElementById('uploadFileBtn');
 
@@ -432,6 +458,15 @@
             deleteFileModal.style.display = 'none';
         });
 
+        // Close share folder modal
+        document.getElementById('closeShareFolderModal').addEventListener('click', () => {
+            shareFolderModal.style.display = 'none';
+        });
+
+        document.getElementById('cancelShareFolderModal').addEventListener('click', () => {
+            shareFolderModal.style.display = 'none';
+        });
+
         // Close on outside click
         window.addEventListener('click', (e) => {
             if (e.target === folderModal) {
@@ -451,6 +486,9 @@
             }
             if (e.target === deleteFileModal) {
                 deleteFileModal.style.display = 'none';
+            }
+            if (e.target === shareFolderModal) {
+                shareFolderModal.style.display = 'none';
             }
         });
 
@@ -541,7 +579,12 @@
             btn.addEventListener('click', (e) => {
                 const menu = e.target.closest('.item-dropdown-menu');
                 const folderId = menu.getAttribute('data-menu-for');
-                alert(`Share folder (ID: ${folderId})`);
+                
+                // Set form action
+                document.getElementById('shareFolderForm').action = `/folders/${folderId}/share`;
+                
+                // Show modal
+                shareFolderModal.style.display = 'flex';
                 menu.classList.remove('active');
             });
         });
@@ -670,6 +713,15 @@
         deleteFileForm.addEventListener('submit', (e) => {
             deleteFileBtn.disabled = true;
             deleteFileBtn.classList.add('btn-loading');
+        });
+
+        // Handle share folder form submission
+        const shareFolderForm = document.getElementById('shareFolderForm');
+        const shareFolderBtn = document.getElementById('shareFolderBtn');
+        
+        shareFolderForm.addEventListener('submit', (e) => {
+            shareFolderBtn.disabled = true;
+            shareFolderBtn.classList.add('btn-loading');
         });
     </script>
 </body>

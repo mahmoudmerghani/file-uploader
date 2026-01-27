@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Folder - File Storage</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                <path d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2m0 18h12V9h-6V3H6v17z"/>
+            </svg>
+            File Storage
+        </a>
+        <div class="navbar-menu">
+            <span style="color: #9aa0a6; margin-right: 16px;">Shared Folder (Read Only)</span>
+        </div>
+    </nav>
+
+    <div class="home-layout">
+        <!-- Side Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Folders</h3>
+            </div>
+            
+            <div class="folder-tree">
+                <%- include("partials/foldersTreeShared", { foldersTree, path, nodeId: rootId, rootId, currentFolderId, sharedId}) %>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <% if (path && path.length > 0) { %>
+                    <% path.forEach((folderId, index) => { %>
+                        <% if (index === path.length - 1) { %>
+                            <a href="/shared/<%= sharedId %>/folders/<%= folderId %>" class="breadcrumb-item active"><%= foldersTree[folderId].name %></a>
+                        <% } else { %>
+                            <a href="/shared/<%= sharedId %>/folders/<%= folderId %>" class="breadcrumb-item"><%= foldersTree[folderId].name %></a>
+                            <svg class="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="content-toolbar">
+                <h2>Work</h2>
+            </div>
+
+            <!-- Folders Section -->
+            <div class="content-section">
+                <h3 class="section-title">Folders</h3>
+                <div class="items-grid">
+                    <% foldersTree[currentFolderId].children.forEach(childId => { %>
+                        <% const folder = foldersTree[childId]; %>
+                        <div class="item-card-wrapper">
+                            <a href="/shared/<%= sharedId %>/folders/<%= folder.id %>" class="item-card folder-card">
+                                <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                                    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                </svg>
+                                <div class="item-info">
+                                    <h4><%= folder.name %></h4>
+                                    <p><%= folder.children.length + folder.files.length %> items • <span class="format-date" data-date="<%= folder.createdAt %>"></span></p>
+                                </div>
+                            </a>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Files Section -->
+            <div class="content-section">
+                <h3 class="section-title">Files</h3>
+                <div class="items-grid">
+                    <% foldersTree[currentFolderId].files.forEach(file => { %>
+                        <div class="item-card-wrapper">
+                            <div class="item-card file-card" title="<%= file.name %>">
+                                <svg class="item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8ab4f8">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                                    <path d="M14 2v6h6"/>
+                                </svg>
+                                <div class="item-info">
+                                    <h4><%= file.name %></h4>
+                                    <p><%= (file.size / 1024 / 1024).toFixed(2) %> MB • <span class="format-date" data-date="<%= file.createdAt %>"></span></p>
+                                </div>
+                                <button class="btn-icon item-menu file-menu-btn" data-file-id="<%= file.id %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="5" r="2"/>
+                                        <circle cx="12" cy="12" r="2"/>
+                                        <circle cx="12" cy="19" r="2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="item-dropdown-menu" data-menu-for="file-<%= file.id %>">
+                                <button class="dropdown-item download-file" data-file-id="<%= file.id %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Format dates in user's local timezone
+        document.querySelectorAll('.format-date').forEach(element => {
+            const dateString = element.getAttribute('data-date');
+            if (dateString) {
+                const date = new Date(dateString);
+                element.textContent = date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            }
+        });
+
+        // File menu dropdown functionality
+        const fileMenuButtons = document.querySelectorAll('.file-menu-btn');
+        let currentOpenMenu = null;
+
+        fileMenuButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const fileId = button.getAttribute('data-file-id');
+                const menu = document.querySelector(`.item-dropdown-menu[data-menu-for="file-${fileId}"]`);
+                
+                // Close currently open menu if different
+                if (currentOpenMenu && currentOpenMenu !== menu) {
+                    currentOpenMenu.classList.remove('active');
+                }
+                
+                // Toggle current menu
+                menu.classList.toggle('active');
+                currentOpenMenu = menu.classList.contains('active') ? menu : null;
+            });
+        });
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.item-dropdown-menu') && !e.target.closest('.item-menu')) {
+                document.querySelectorAll('.item-dropdown-menu.active').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+                currentOpenMenu = null;
+            }
+        });
+
+        // Handle file download
+        document.querySelectorAll('.download-file').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const fileId = btn.getAttribute('data-file-id');
+                const sharedId = '<%= sharedId %>';
+                
+                // Trigger download
+                window.location.href = `/shared/${sharedId}/files/${fileId}/download`;
+                
+                const menu = e.target.closest('.item-dropdown-menu');
+                menu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

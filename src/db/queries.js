@@ -252,6 +252,34 @@ async function deleteFile(fileId, userId) {
     });
 }
 
+async function createShareLink(folderId, expirationPeriod) {
+    const link = await prisma.shareLink.create({
+        data: {
+            folderId,
+            expiresAt: new Date(Date.now() + expirationPeriod),
+        },
+    });
+
+    return link.id;
+}
+
+async function getSharedLink(linkId) {
+    const link = await prisma.shareLink.findFirst({
+        where: {
+            id: linkId,
+        },
+        include: {
+            folder: {
+                include: {
+                    user: true,
+                },
+            },
+        },
+    });
+
+    return link;
+}
+
 export default {
     getUserByUsername,
     createUser,
@@ -271,4 +299,6 @@ export default {
     getFileById,
     renameFile,
     deleteFile,
+    createShareLink,
+    getSharedLink,
 };

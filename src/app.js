@@ -9,6 +9,7 @@ import { join } from "node:path";
 import indexRouter from "./routes/indexRouter.js";
 import filesRouter from "./routes/filesRouter.js";
 import foldersRouter from "./routes/foldersRouter.js";
+import sharedLinksRouter from "./routes/sharedLinksRouter.js";
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 app.use("/", indexRouter);
 app.use("/folders", foldersRouter);
 app.use("/files", filesRouter);
+app.use("/shared", sharedLinksRouter);
 
 app.use((req, res, next) => {
 

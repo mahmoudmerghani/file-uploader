@@ -16,4 +16,6 @@ foldersRouter.post("/:folderId/rename", authorization.authorizeFolderAccess, fol
 
 foldersRouter.post("/:folderId/delete", authorization.authorizeFolderAccess, foldersController.deleteFolder);
 
+foldersRouter.post("/:folderId/share", authorization.authorizeFolderAccess, foldersController.shareFolder);
+
 export default foldersRouter;

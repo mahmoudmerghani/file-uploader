@@ -40,13 +40,22 @@ model File {
 }
 
 model Folder {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
   files     File[]
-  parent    Folder?  @relation("children", fields: [parentId], references: [id])
-  children  Folder[] @relation("children")
-  user      User     @relation(fields: [userId], references: [id])
+  parent    Folder?    @relation("children", fields: [parentId], references: [id])
+  children  Folder[]   @relation("children")
+  user      User       @relation(fields: [userId], references: [id])
   parentId  Int?
   userId    Int
+  shareLink ShareLink[]
+}
+
+model ShareLink {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  folderId  Int
+  folder    Folder   @relation(fields: [folderId], references: [id])
 }
