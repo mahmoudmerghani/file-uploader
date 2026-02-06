@@ -182,28 +182,64 @@ async function renameFolder(folderId, name) {
     });
 }
 
-async function deleteFolder(folderId) {
-    const children = await prisma.folder.findMany({
-        where: {
-            parentId: folderId,
-        },
-    });
+async function deleteFolder(folderId, userId) {
+    const folders = await getUserFolders(userId);
+    const folderTree = buildFolderTree(folders);
 
-    for (const child of children) {
-        await deleteFolder(child.id);
+    const folderIds = [];
+    const files = [];
+    const stack = [folderId];
+
+    while (stack.length) {
+        const currentFolderId = stack.pop();
+        folderIds.push(currentFolderId);
+        files.push(...folderTree.folders[currentFolderId].files);
+
+        for (const id of folderTree.folders[currentFolderId].children) {
+            stack.push(id);
+        }
     }
 
-    await prisma.file.deleteMany({
-        where: {
-            folderId,
-        },
+    const totalFilesSize = files.reduce((sum, curr) => sum + curr.size, 0);
+
+    await prisma.$transaction(async (tx) => {
+        await tx.shareLink.deleteMany({
+            where: {
+                folderId: {
+                    in: folderIds,
+                },
+            },
+        });
+
+        await tx.file.deleteMany({
+            where: {
+                folderId: {
+                    in: folderIds,
+                },
+            },
+        });
+
+        await tx.folder.deleteMany({
+            where: {
+                id: {
+                    in: folderIds,
+                },
+            },
+        });
+
+        await tx.user.update({
+            data: {
+                quota: {
+                    decrement: totalFilesSize,
+                },
+            },
+            where: {
+                id: userId,
+            },
+        });
     });
 
-    await prisma.folder.delete({
-        where: {
-            id: folderId,
-        },
-    });
+    return files;
 }
 
 async function getFileById(fileId) {
@@ -230,11 +266,14 @@ async function renameFile(fileId, name) {
     });
 }
 
-async function deleteFile(fileId, userId) {
+async function deleteFile(fileId) {
     await prisma.$transaction(async (tx) => {
         const deletedFile = await tx.file.delete({
             where: {
                 id: fileId,
+            },
+            include: {
+                folder: true,
             },
         });
 
@@ -246,7 +285,7 @@ async function deleteFile(fileId, userId) {
             },
 
             where: {
-                id: userId,
+                id: deletedFile.folder.userId,
             },
         });
     });

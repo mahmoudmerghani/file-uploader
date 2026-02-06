@@ -1,4 +1,5 @@
 import queries from "../db/queries.js";
+import { supabase } from "../../lib/supabase.js";
 
 async function loadFolder(req, res, next) {
     const { folderId } = req.params;
@@ -42,7 +43,10 @@ async function renameFolder(req, res) {
 }
 
 async function deleteFolder(req, res) {
-    await queries.deleteFolder(req.folder.id);
+    const deletedFiles = await queries.deleteFolder(req.folder.id, req.user.id);
+    const paths = deletedFiles.map((file) => file.path);
+
+    await supabase.storage.from("files").remove(paths);
 
     res.redirect(`/folders/${req.folder.parentId}`);
 }

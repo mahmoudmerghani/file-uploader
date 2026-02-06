@@ -13,6 +13,7 @@ async function uploadFile(req, res) {
         .upload(randomName, req.file.buffer);
 
     if (error) {
+        console.log(error)
         throw new Error("Upload failed, try again");
     }
 
