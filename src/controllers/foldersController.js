@@ -1,16 +1,6 @@
 import queries from "../db/queries.js";
 import { supabase } from "../../lib/supabase.js";
 
-async function loadFolder(req, res, next) {
-    const { folderId } = req.params;
-
-    const folder = await queries.getFolderById(Number(folderId));
-
-    req.folder = folder;
-
-    return next();
-}
-
 async function getFolder(req, res) {
     const folders = await queries.getUserFolders(req.user.id);
     const foldersTree = queries.buildFolderTree(folders);
@@ -37,12 +27,20 @@ async function createFolder(req, res) {
 }
 
 async function renameFolder(req, res) {
+    if (req.folder.parentId === null) {
+        throw new Error("Cannot change root folder");
+    }
+
     await queries.renameFolder(req.folder.id, req.body.name);
 
     res.redirect(`/folders/${req.folder.parentId}`);
 }
 
 async function deleteFolder(req, res) {
+    if (req.folder.parentId === null) {
+        throw new Error("Cannot delete root folder");
+    }
+
     const deletedFiles = await queries.deleteFolder(req.folder.id, req.user.id);
     const paths = deletedFiles.map((file) => file.path);
 
