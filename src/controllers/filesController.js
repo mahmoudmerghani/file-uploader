@@ -7,6 +7,7 @@ async function uploadFile(req, res) {
         throw new Error("Quota exceeded, try deleting files");
     }
 
+    const fileName = Buffer.from(req.file.originalname, "latin1").toString("utf-8");
     const randomName = crypto.randomBytes(16).toString("hex");
     const { data, error } = await supabase.storage
         .from("files")
@@ -18,7 +19,7 @@ async function uploadFile(req, res) {
     }
 
     await queries.createFile({
-        name: req.file.originalname,
+        name: fileName,
         mimeType: req.file.mimetype,
         size: req.file.size,
         path: randomName,
